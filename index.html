@@ -4,7 +4,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script>
 			$.ajax({
-				url: "resources/top_replays.json",
+				url: "/resources/top_replays.json",
 				mimeType: "json",
 				success: function(data) {
 					for (var i = 0; i < data.top_replays.length; i++) {
@@ -21,7 +21,7 @@
 	<body>
 		<div class="index">
 			<h1>紅魔郷の巫女の領域 (pienyan's domain)</h1>
-			<img src="resources/567_1-0.png" /><br />
+			<img src="/resources/567_1-0.png" /><br />
 			<br />
 			This is a place full of mysterious things.<br/>
 			In case of emergency, you can find my replays here, along with whatever else I feel like adding.<br />
