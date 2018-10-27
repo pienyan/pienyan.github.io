@@ -1,0 +1,23 @@
+body {
+	font-family: "Verdana", "MS PGothic"	
+}
+
+table {
+	border-collapse: collapse
+}
+
+tr:nth-child(1) {
+	border-bottom: 1px black solid
+}
+
+tr:nth-child(even) {
+	background: #ddd
+}
+
+td {
+	padding: 3px 6px
+}
+
+.index {
+	text-align: center
+}
