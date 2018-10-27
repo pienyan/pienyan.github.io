@@ -1,49 +1,38 @@
 <html>
 	<head>
-		<link rel="stylesheet" href="css/main_css.css">
+		<link rel="stylesheet" href="resources/main_css.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			$.ajax({
+				url: "resources/top_replays.json",
+				mimeType: "json",
+				success: function(data) {
+					for (var i = 0; i < data.top_replays.length; i++) {
+						$("#top_replays").append(
+							"<tr><td>" + data.top_replays[i].date + "</td>" +
+							"<td>" + data.top_replays[i].desc + "</td>" +
+							"<td><a href='" + data.top_replays[i].replay_link + "'>replay</a></td></tr>"
+						);
+					}
+				}
+			});
+		</script>
 	</head>
 	<body>
 		<div class="index">
 			<h1>紅魔郷の巫女の領域 (pienyan's domain)</h1>
+			<img src="resources/567_1-0.png" /><br />
 			<br />
 			This is a place full of mysterious things.<br/>
 			In case of emergency, you can find my replays here, along with whatever else I feel like adding.<br />
 			<h3>Best Achievements:</h3>
-			<table align="center">
+			<table align="center" id="top_replays">
 				<tr>
-					<td>
-						Date
-					</td><td>
-						Achievement
-					</td><td>
-						Links
-					</td>
+					<td>Date:</td>
+					<td>Achievement:</td>
+					<td>Links:</td>
 				</tr>
-				<tr>
-					<td>
-						07-05-2018
-					</td><td>
-						EoSD Lunatic 1MNB
-					</td><td>
-						<a href="replays/th6_udpn01.rpy">replay</a>
-					</td>
-				</tr><tr>
-					<td>
-						04-04-2018
-					</td><td>
-						EoSD Lunatic 3MNB, ReimuA
-					</td><td>
-						<a href="replays/th6_udpn02.rpy">replay</a>
-					</td>
-				</tr><tr>
-					<td>
-						10-12-2018
-					</td><td>
-						EoSD Lunatic score attack 567M
-					</td><td>
-						<a href="replays/th6_udpn03.rpy">replay</a>
-					</td>
-				</tr>
+				<!-- This gets populated with JS! -->
 			</table>
 			<h3>Links:</h3>
 			Twitch: <a href="https://www.twitch.tv/pienyan_">https://www.twitch.tv/pienyan_</a><br />

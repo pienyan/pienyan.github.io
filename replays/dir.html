@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="resources/main_css.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			$.ajax({
+				url: "/resources/replays.json",
+				mimeType: "json",
+				success: function(data) {
+					for (var i = 0; i < data.replays.length; i++) {
+						$("#replays").append(
+							"<tr><td>" + data.replays[i].date + "</td>" +
+							"<tr><td>" + data.replays[i].player + "</td>" +
+							"<tr><td>" + data.replays[i].game + "</td>" +
+							"<tr><td>" + data.replays[i].shottype + "</td>" +
+							"<td>" + data.replays[i].desc + "</td>" +
+							"<td><a href='" + data.replays[i].replay_link + "'>replay</a></td></tr>"
+						);
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div class="index">
+			<h3>Replay Directory <a href="/">(return to homepage)</a></h3>
+			<table align="center" id="replays">
+				<tr>
+					<td>Date:</td>
+					<td>Player:</td>
+					<td>Game:</td>
+					<td>Shottype:</td>
+					<td>Description:</td>
+					<td>Links:</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

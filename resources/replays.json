@@ -1,0 +1,28 @@
+{"top_replays": 
+	[
+		{
+			"date": "07-05-2018",
+			"player": "pienyan",
+			"game": "EoSD",
+			"shottype": "ReimuB",
+			"desc": "Lunatic 1MNB",
+			"replay_link": "/replays/th6_udpn01.rpy"
+		},
+		{
+			"date": "04-04-2018",
+			"player": "pienyan",
+			"game": "EoSD",
+			"shottype": "ReimuA",
+			"desc": "Lunatic 3MNB",
+			"replay_link": "/replays/th6_udpn02.rpy"
+		},
+		{
+			"date": "10-12-2018",
+			"player": "pienyan",
+			"game": "EoSD",
+			"shottype", "ReimuB",
+			"desc": "Lunatic score attack 567M",
+			"replay_link": "/replays/th6_udpn03.rpy"
+		}
+	]
+}
