@@ -62,7 +62,7 @@ We'll just see where this goes.-->
 					var shottype = $("#shottype").val();
 					var difficulty = $("#difficulty").val();
 					var conditions = 0;
-					var sort = $("#sort").val();
+					var sort = parseInt($("#sort").val());
 					var desc = $("#desc").val();
 					if ($("#no-bomb").prop("checked")) conditions += 1;
 					if ($("#no-miss").prop("checked")) conditions += 2;
