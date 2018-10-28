@@ -64,7 +64,6 @@ We'll just see where this goes.-->
 					var conditions = 0;
 					var sort = $("#sort").val();
 					var desc = $("#desc").val();
-					console.log(desc);
 					if ($("#no-bomb").prop("checked")) conditions += 1;
 					if ($("#no-miss").prop("checked")) conditions += 2;
 					if ($("#no-focus").prop("checked")) conditions += 4;
@@ -73,7 +72,7 @@ We'll just see where this goes.-->
 					//console.log (player + game + shottype + difficulty + conditions)
 					var redirectURL = "/replays/dir.html?" + (sort > 0 ? "sort="+sort+"&" : "") + (desc != "false" ? "" : "desc=false&") + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
 					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
-					//window.location.href = redirectURL;
+					window.location.href = redirectURL;
 				});
 				// Sorting functions
 				function dateSort(a, b) { return a.date - b.date; };
@@ -108,7 +107,6 @@ We'll just see where this goes.-->
 						var conditions = parsedURL.searchParams.get("conditions");
 						var sort = parsedURL.searchParams.get("sort");
 						var desc = (parsedURL.searchParams.get("desc") != "false" ? true : false);
-						console.log("desc");
 						if (!sort) sort = 0;
 						if (player) {
 							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
@@ -217,7 +215,7 @@ We'll just see where this goes.-->
 				<option value="5">Score</option>
 			</select> <select id="desc">
 				<option value="true">Descending</option>
-				<option value="true">Ascending</option>
+				<option value="false">Ascending</option>
 			</select> -- <input type="button" id="filter" value="Go"><br />
 			<a href="#" id="reset">Reset</a><br />
 			<br />
