@@ -3,93 +3,173 @@
 		<link rel="stylesheet" href="/resources/main_css.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script>
-			// Lookup tables for games/difficulties
-			var games = {6: "EoSD",
-						 7: "PCB",
-						 8: "IN",
-						 9: "PoFV",
-						 10: "MoF",
-						 11: "SA",
-						 12: "UFO",
-						 12.8: "GFW",
-						 13: "TD",
-						 14: "DDC",
-						 15: "LoLK",
-						 16: "HSiFS"};
-			var difficulties = {1: "Easy",
-								2: "Normal",
-								3: "Hard",
-								4: "Lunatic",
-								5: "Extra",
-								6: "Phantasm",
-								7: "Last Word"};
-			// Sorting functions
-			function dateSort(a, b) { return a.date - b.date; };
-			function nameSort(a, b) { return a.player.toLowerCase().localeCompare(b.player.toLowerCase()); };
-			function gameSort(a, b) { return a.game - b.game; };
-			function difficultySort(a, b) { return a.difficulty - b.difficulty; };
-			function shottypeSort(a, b) { return a.shottype.toLowerCase().localeCompare(b.shottype.toLowerCase()); };
-			function scoreSort(a, b) { return a.score - b.score; };
-			// Load replay table
-			$.ajax({
-				url: "/resources/replays.json",
-				mimeType: "json",
-				success: function(data) {
-					// Sorting - use sortType and if it's equal sort by date descending.
-					var replayTable = data.replays;
-					var desc = true;
-					// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
-					var sortType = 0;
-					if (sortType == 0) {
-						replayTable.sort(function(a, b) {
-							return (desc ? dateSort(b, a) : dateSort(a, b));
-						});
-					} else if (sortType == 1) {
-						replayTable.sort(function(a, b) {
-							if (nameSort(b, a) == 0) return dateSort(b, a);
-							return (desc ? nameSort(b, a) : nameSort(a, b));
-						});
-					} else if (sortType == 2) {
-						replayTable.sort(function(a, b) {
-							if (gameSort(b, a) == 0) return dateSort(b, a);
-							return (desc ? gameSort(b, a) : gameSort(a, b));
-						});
-					} else if (sortType == 3) {
-						replayTable.sort(function(a, b) {
-							if (difficultySort(b, a) == 0) return dateSort(b, a);
-							return (desc ? difficultySort(b, a) : difficultySort(a, b));
-						});
-					} else if (sortType == 4) {
-						replayTable.sort(function(a, b) {
-							if (shottypeSort(b, a) == 0) return dateSort(b, a);
-							return (desc ? shottypeSort(b, a) : shottypeSort(a, b));
-						});
-					} else if (sortType == 5) {
-						replayTable.sort(function(a, b) {
-							if (scoreSort(b, a) == 0) return dateSort(b, a);
-							return (desc ? scoreSort(b, a) : scoreSort(a, b));
-						});
-					}
-					// Populating table
-					for (var i = 0; i < replayTable.length; i++) {
-						$("#replays").append(
-							"<tr><td>" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
-							"<td>" + replayTable[i].player + "</td>" +
-							"<td>" + games[replayTable[i].game] + "</td>" +
-							"<td>" + difficulties[replayTable[i].difficulty] + "</td>" +
-							"<td>" + replayTable[i].shottype + "</td>" +
-							"<td>" + replayTable[i].score.toLocaleString() + "</td>" +
-							"<td>" + replayTable[i].desc + "</td>" +
-							"<td><a href='" + replayTable[i].replay_link + "'>replay</a></td></tr>"
-						);
-					}
+			$( function() {
+				// Lookup tables for games/difficulties
+				var games = {6: "EoSD",
+							 7: "PCB",
+							 8: "IN",
+							 9: "PoFV",
+							 10: "MoF",
+							 11: "SA",
+							 12: "UFO",
+							 12.8: "GFW",
+							 13: "TD",
+							 14: "DDC",
+							 15: "LoLK",
+							 16: "HSiFS"};
+				var difficulties = {1: "Easy",
+									2: "Normal",
+									3: "Hard",
+									4: "Lunatic",
+									5: "Extra",
+									6: "Phantasm",
+									7: "Last Word"};					
+				// Page jump redirect function
+				$("#jump").on("click", function() {
+					console.log("test");
+					var page = parseInt(prompt("Jump to page:"));
+					if (page && page > 0)
+						window.location.href = "/replays/dir.html?page="+page;
+					else
+						alert("Page must be a number greater than 0.");
+				});
+				// Filter redirect function
+				$("#filter").on("click", function() {
+					var player = $("#player").val();
+					var game = $("#game").val();
+					var shottype = $("#shottype").val();
+					var difficulty = $("#difficulty").val();
+					var conditions = 0;
+					if ($("#no-bomb").prop("checked")) conditions += 1;
+					if ($("#no-miss").prop("checked")) conditions += 2;
+					if ($("#no-focus").prop("checked")) conditions += 4;
+					if ($("#TAS").prop("checked")) conditions += 8;
+					if ($("#other").prop("checked")) conditions += 16;
+					//console.log (player + game + shottype + difficulty + conditions)
+					var redirectURL = "/replays/dir.html&" + (player.length > 0 ? "player="+player : "") + (game > 0 ? "game="+game : "") + (shottype.length > 0 ? "shottype="+shottype : "") + (difficulty > 0 ? "difficulty="+difficulty : "") + (conditions > 0 ? "conditions="+conditions : "");
+					redirectURL.replace("&","?");
+					window.location.href = redirectURL;
+				});
+				// Sorting functions
+				function dateSort(a, b) { return a.date - b.date; };
+				function nameSort(a, b) { return a.player.toLowerCase().localeCompare(b.player.toLowerCase()); };
+				function gameSort(a, b) { return a.game - b.game; };
+				function difficultySort(a, b) { return a.difficulty - b.difficulty; };
+				function shottypeSort(a, b) { return a.shottype.toLowerCase().localeCompare(b.shottype.toLowerCase()); };
+				function scoreSort(a, b) { return a.score - b.score; };
+				// Populate game table
+				for (var key in games) {
+					$("#game").append("<option value='"+key+"'>"+games[key]+"</option>");
 				}
+				// Populate difficulty table
+				for (var key in difficulties) {
+					$("#difficulty").append("<option value='"+key+"'>"+difficulties[key]+"</option>");
+				}
+				// Load replay table
+				$.ajax({
+					url: "replays.json",
+					mimeType: "json",
+					success: function(data) {
+						// Initialization
+						var replayTable = data.replays
+						var parsedURL = new URL(window.location.href);
+						var desc = true;
+						var page = 1;
+						// Filtering.  Can filter by player name, game, shottype,  difficulty or condition.
+						var player = parsedURL.searchParams.get("player");
+						var game = parsedURL.searchParams.get("game");
+						var shottype = parsedURL.searchParams.get("shottype");
+						var difficulty = parsedURL.searchParams.get("difficulty");
+						var conditions = parsedURL.searchParams.get("conditions");
+						if (player) {
+							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
+						}
+						if (game) {
+							replayTable = replayTable.filter(a => a.game == parseInt(game));
+						}
+						if (shottype) {
+							replayTable = replayTable.filter(a => a.shottype.toLowerCase().startsWith(shottype.toLowerCase()));
+						}
+						if (difficulty) {
+							replayTable = replayTable.filter(a => a.difficulty == parseInt(difficulty));
+						}
+						if (conditions) {
+							replayTable = replayTable.filter(a => (a.conditions & conditions) == conditions);
+						}
+						// Calculate numbers based  on filtered table.
+						var start = ((page - 1) * 100 > replayTable.length ? (page - 1) * 100 : 0);
+						var end = Math.min(start + 100, replayTable.length);
+						$("#noOfReplays").append("Showing results " + (start + 1) + " to " + end + " of " + replayTable.length + " total.  <a href='/replays/dir.html'>Next page</a> -- <a href='/replays/dir.html'>Previous page</a> -- <a href='#' id='jump'>Jump to page</a>");
+						// Sorting - use sortType and if it's equal sort by date descending.
+						// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
+						var sortType = 0;
+						if (sortType == 0) {
+							replayTable.sort(function(a, b) {
+								return (desc ? dateSort(b, a) : dateSort(a, b));
+							});
+						} else if (sortType == 1) {
+							replayTable.sort(function(a, b) {
+								if (nameSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? nameSort(b, a) : nameSort(a, b));
+							});
+						} else if (sortType == 2) {
+							replayTable.sort(function(a, b) {
+								if (gameSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? gameSort(b, a) : gameSort(a, b));
+							});
+						} else if (sortType == 3) {
+							replayTable.sort(function(a, b) {
+								if (difficultySort(b, a) == 0) return dateSort(b, a);
+								return (desc ? difficultySort(b, a) : difficultySort(a, b));
+							});
+						} else if (sortType == 4) {
+							replayTable.sort(function(a, b) {
+								if (shottypeSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? shottypeSort(b, a) : shottypeSort(a, b));
+							});
+						} else if (sortType == 5) {
+							replayTable.sort(function(a, b) {
+								if (scoreSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? scoreSort(b, a) : scoreSort(a, b));
+							});
+						}
+						// Populating table
+						for (var i = start; i < end; i++) {
+							// Calculate conditions.
+							var conditions = "";
+							if ((replayTable[i].conditions & 1) > 0) conditions += "NB ";
+							if ((replayTable[i].conditions & 2) > 0) conditions += "NM ";
+							if ((replayTable[i].conditions & 4) > 0) conditions += "NF ";
+							if ((replayTable[i].conditions & 8) > 0) conditions += "TAS ";
+							if ((replayTable[i].conditions & 16) > 0) conditions += "? ";
+							// Add row to table
+							$("#replays").append(
+								"<tr><td>" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
+								"<td>" + replayTable[i].player + "</td>" +
+								"<td>" + games[replayTable[i].game] + "</td>" +
+								"<td>" + difficulties[replayTable[i].difficulty] + "</td>" +
+								"<td>" + replayTable[i].shottype + "</td>" +
+								"<td>" + replayTable[i].score.toLocaleString() + "</td>" +
+								"<td>" + (replayTable[i].clear ? "Y" : "N") + "</td>" + 
+								"<td><b>" + conditions + "</b></td>" + 
+								"<td>" + replayTable[i].desc + "</td>" +
+								"<td><a href='" + replayTable[i].replay_link + "'>replay</a></td></tr>"
+							);
+						}
+					}
+				});
 			});
 		</script>
 	</head>
 	<body>
 		<div class="index">
 			<h3>Replay Directory <a href="/">(return to homepage)</a></h3>
+			<br />
+			Filter by: player name <input type="text" id="player"> -- game <select id="game"><option value="0">None</option></select> -- shottype <input type="text" id="shottype"> -- difficulty <select id="difficulty"><option value="0">None</option></select><br />
+			Conditions: no bomb <input type="checkbox" id="no-bomb"> -- no miss <input type="checkbox" id="no-miss"> -- no focus <input type="checkbox" id="no-focus"> -- TAS <input type="checkbox" id="TAS"> -- other <input type="checkbox" id="other"> -- <input type="button" id="filter" value="Go"><br />
+			<br />
+			<span id="noOfReplays"></span><br />
+			<br />
 			<table align="center" id="replays">
 				<tr>
 					<td>Date:</td>
@@ -98,6 +178,8 @@
 					<td>Difficulty:</td>
 					<td>Shottype:</td>
 					<td>Score:</td>
+					<td>(C)?</td>
+					<td>Conditions:</td>
 					<td>Description:</td>
 					<td>Links:</td>
 				</tr>
