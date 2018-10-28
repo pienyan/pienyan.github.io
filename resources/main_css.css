@@ -21,3 +21,11 @@ td {
 .index {
 	text-align: center
 }
+
+.desc {
+	max-width: 400px;
+}
+
+.date {
+	min-width: 160px;
+}
