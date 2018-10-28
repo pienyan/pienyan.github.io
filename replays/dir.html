@@ -139,7 +139,7 @@ We'll just see where this goes.-->
 							if ((replayTable[i].conditions & 16) > 0) conditions += "? ";
 							// Add row to table
 							$("#replays").append(
-								"<tr><td class="date">" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
+								"<tr><td class='date'>" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
 								"<td>" + replayTable[i].player + "</td>" +
 								"<td>" + games[replayTable[i].game] + "</td>" +
 								"<td>" + difficulties[replayTable[i].difficulty] + "</td>" +
@@ -147,7 +147,7 @@ We'll just see where this goes.-->
 								"<td>" + replayTable[i].score.toLocaleString() + "</td>" +
 								"<td>" + (replayTable[i].clear ? "Y" : "N") + "</td>" + 
 								"<td><b>" + conditions + "</b></td>" + 
-								"<td class="desc">" + replayTable[i].desc + "</td>" +
+								"<td class='desc'>" + replayTable[i].desc + "</td>" +
 								"<td><a href='" + replayTable[i].replay_link + "'>replay</a></td></tr>"
 							);
 						}
@@ -223,7 +223,7 @@ We'll just see where this goes.-->
 			<br />
 			<table align="center" id="replays">
 				<tr>
-					<td class="date">Date:</td>
+					<td class='date'>Date:</td>
 					<td>Player:</td>
 					<td>Game:</td>
 					<td>Difficulty:</td>
@@ -231,7 +231,7 @@ We'll just see where this goes.-->
 					<td>Score:</td>
 					<td>(C)?</td>
 					<td>Conditions:</td>
-					<td class="desc">Description:</td>
+					<td class='desc'>Description:</td>
 					<td>Links:</td>
 				</tr>
 			</table>
