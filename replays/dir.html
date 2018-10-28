@@ -32,48 +32,6 @@ We'll just see where this goes.-->
 									5: "Extra",
 									6: "Phantasm",
 									7: "Last Word"};
-				// Reset function
-				$("#reset").on("click", function() {
-					$("#player").val("");
-					$("#game").val(0);
-					$("#shottype").val("");
-					$("#difficulty").val(0);
-					$("#no-bomb").prop("checked", false);
-					$("#no-miss").prop("checked", false);
-					$("#no-focus").prop("checked", false);
-					$("#TAS").prop("checked", false);
-					$("#other").prop("checked", false);
-					$("#sort").val(0);
-					$("#desc").val("true");
-				});
-				// Page jump redirect function
-				$("#jump").on("click", function() {
-					console.log("test");
-					var page = parseInt(prompt("Jump to page:"));
-					if (page && page > 0)
-						window.location.href = "/replays/dir.html?page="+page;
-					else
-						alert("Page must be a number greater than 0.");
-				});
-				// Filter redirect function
-				$("#filter").on("click", function() {
-					var player = $("#player").val();
-					var game = $("#game").val();
-					var shottype = $("#shottype").val();
-					var difficulty = $("#difficulty").val();
-					var conditions = 0;
-					var sort = $("#sort").val();
-					var desc = $("#desc").val();
-					if ($("#no-bomb").prop("checked")) conditions += 1;
-					if ($("#no-miss").prop("checked")) conditions += 2;
-					if ($("#no-focus").prop("checked")) conditions += 4;
-					if ($("#TAS").prop("checked")) conditions += 8;
-					if ($("#other").prop("checked")) conditions += 16;
-					//console.log (player + game + shottype + difficulty + conditions)
-					var redirectURL = "/replays/dir.html?" + (sort > 0 ? "sort="+sort+"&" : "") + (desc != "false" ? "" : "desc=false&") + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
-					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
-					window.location.href = redirectURL;
-				});
 				// Sorting functions
 				function dateSort(a, b) { return a.date - b.date; };
 				function nameSort(a, b) { return a.player.toLowerCase().localeCompare(b.player.toLowerCase()); };
@@ -135,7 +93,7 @@ We'll just see where this goes.-->
 						// Calculate numbers based  on filtered table.
 						var start = ((page - 1) * 100 > replayTable.length ? (page - 1) * 100 : 0);
 						var end = Math.min(start + 100, replayTable.length);
-						$("#noOfReplays").append("Showing results " + (replayTable.length > 0 ? (start + 1) : 0) + " to " + end + " of " + replayTable.length + " total.  " + (end < replayTable.length ? "<a href='/replays/dir.html?page="+(page + 1)+"'>Next page</a> -- " : "") + (start > 0 ? "<a href='/replays/dir.html?page="+(page - 1)+"'>Previous page</a> -- " : "") + "<a href='#' id='jump'>Jump to page</a>");
+						$("#noOfReplays").append("Showing results " + (replayTable.length > 0 ? (start + 1) : 0) + " to " + end + " of " + replayTable.length + " total.  " + (end < replayTable.length ? "<a href='/replays/dir.html?page="+(page + 1)+"'>Next page</a> -- " : "") + (start > 0 ? "<a href='/replays/dir.html?page="+(page - 1)+"'>Previous page</a> -- " : ""));
 						// Sorting - use sort and if it's equal sort by date descending.  Also keep sort values in the input boxes.
 						// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
 						if (sort == 0) {
@@ -195,6 +153,48 @@ We'll just see where this goes.-->
 						}
 					}
 				});
+				// Reset function
+				$("#reset").on("click", function() {
+					$("#player").val("");
+					$("#game").val(0);
+					$("#shottype").val("");
+					$("#difficulty").val(0);
+					$("#no-bomb").prop("checked", false);
+					$("#no-miss").prop("checked", false);
+					$("#no-focus").prop("checked", false);
+					$("#TAS").prop("checked", false);
+					$("#other").prop("checked", false);
+					$("#sort").val(0);
+					$("#desc").val("true");
+				});
+				// Page jump redirect function.
+				$("#jump").on("click", function() {
+					console.log("test");
+					var page = parseInt(prompt("Jump to page:"));
+					if (page && page > 0)
+						window.location.href = "/replays/dir.html?page="+page;
+					else
+						alert("Page must be a number greater than 0.");
+				});
+				// Filter redirect function
+				$("#filter").on("click", function() {
+					var player = $("#player").val();
+					var game = $("#game").val();
+					var shottype = $("#shottype").val();
+					var difficulty = $("#difficulty").val();
+					var conditions = 0;
+					var sort = $("#sort").val();
+					var desc = $("#desc").val();
+					if ($("#no-bomb").prop("checked")) conditions += 1;
+					if ($("#no-miss").prop("checked")) conditions += 2;
+					if ($("#no-focus").prop("checked")) conditions += 4;
+					if ($("#TAS").prop("checked")) conditions += 8;
+					if ($("#other").prop("checked")) conditions += 16;
+					//console.log (player + game + shottype + difficulty + conditions)
+					var redirectURL = "/replays/dir.html?" + (sort > 0 ? "sort="+sort+"&" : "") + (desc != "false" ? "" : "desc=false&") + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
+					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
+					window.location.href = redirectURL;
+				});
 			});
 		</script>
 	</head>
@@ -219,7 +219,7 @@ We'll just see where this goes.-->
 			</select> -- <input type="button" id="filter" value="Go"><br />
 			<a href="#" id="reset">Reset</a><br />
 			<br />
-			<span id="noOfReplays"></span><br />
+			<span id="noOfReplays"></span> <a href='#' id='jump'>Jump to page</a><br />
 			<br />
 			<table align="center" id="replays">
 				<tr>
