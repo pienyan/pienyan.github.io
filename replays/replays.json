@@ -119,6 +119,18 @@
 			"conditions": 0,
 			"desc": "Hi Mari, I stole your replay for testing reasons.  Hope you don't mind.  xoxo",
 			"replay_link": "/replays/th13_udMn01.rpy"
+		},
+		{
+			"date": 1537588800000,
+			"player": "TrickOfHat",
+			"game": 6,
+			"difficulty": 3,
+			"shottype": "ReimuB",
+			"score": 393576770,
+			"clear": true,
+			"conditions": 0,
+			"desc": "Hard score attack 393M.  I wonder if he'll notice I put his replay on here.",
+			"replay_link": "/replays/th06_udTt01.rpy"
 		}
 	]
 }
