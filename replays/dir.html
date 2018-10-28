@@ -91,7 +91,7 @@ We'll just see where this goes.-->
 							if ((conditions & 16) > 0) $("#other").prop("checked", true);
 						}
 						// Calculate numbers based  on filtered table.
-						var start = ((page - 1) * 100 > replayTable.length ? (page - 1) * 100 : 0);
+						var start = ((page - 1) * 100 > replayTable.length ? 0 : (page - 1) * 100);
 						var end = Math.min(start + 100, replayTable.length);
 						$("#noOfReplays").append("Showing results " + (replayTable.length > 0 ? (start + 1) : 0) + " to " + end + " of " + replayTable.length + " total.  " + (end < replayTable.length ? "<a href='/replays/dir.html?page="+(page + 1)+"'>Next page</a> -- " : "") + (start > 0 ? "<a href='/replays/dir.html?page="+(page - 1)+"'>Previous page</a> -- " : ""));
 						// Sorting - use sort and if it's equal sort by date descending.  Also keep sort values in the input boxes.
