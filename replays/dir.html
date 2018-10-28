@@ -32,7 +32,7 @@
 			function scoreSort(a, b) { return a.score - b.score; };
 			// Load replay table
 			$.ajax({
-				url: "replays.json",
+				url: "/resources/replays.json",
 				mimeType: "json",
 				success: function(data) {
 					// Sorting - use sortType and if it's equal sort by date descending.
