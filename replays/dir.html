@@ -54,8 +54,8 @@ We'll just see where this goes.-->
 					if ($("#TAS").prop("checked")) conditions += 8;
 					if ($("#other").prop("checked")) conditions += 16;
 					//console.log (player + game + shottype + difficulty + conditions)
-					var redirectURL = "/replays/dir.html?" + (player.length > 0 ? "player="+player+"&" : "") + + (game > 0 ? "game="+game+"&" : "") + (shottype.length+"&" > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
-					if (redirectURL.endsWith("?")) redirectURL = redirectURL.substring(0, redirectURL.length - 1);
+					var redirectURL = "/replays/dir.html?" + (player.length > 0 ? "player="+player+"&" : "") + + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
+					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
 					window.location.href = redirectURL;
 				});
 				// Sorting functions
