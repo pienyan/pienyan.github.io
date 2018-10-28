@@ -48,13 +48,15 @@ We'll just see where this goes.-->
 					var shottype = $("#shottype").val();
 					var difficulty = $("#difficulty").val();
 					var conditions = 0;
+					var sort = $("#sort").val();
+					var desc = $("#desc").val();
 					if ($("#no-bomb").prop("checked")) conditions += 1;
 					if ($("#no-miss").prop("checked")) conditions += 2;
 					if ($("#no-focus").prop("checked")) conditions += 4;
 					if ($("#TAS").prop("checked")) conditions += 8;
 					if ($("#other").prop("checked")) conditions += 16;
 					//console.log (player + game + shottype + difficulty + conditions)
-					var redirectURL = "/replays/dir.html?" + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
+					var redirectURL = "/replays/dir.html?" + (sort > 0 ? "sort="+sort+"&" : "") + (desc != "true" ? "desc=false&" : "") + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
 					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
 					window.location.href = redirectURL;
 				});
@@ -81,7 +83,6 @@ We'll just see where this goes.-->
 						// Initialization
 						var replayTable = data.replays
 						var parsedURL = new URL(window.location.href);
-						var desc = true;
 						var page = 1;
 						// Filtering.  Can filter by player name, game, shottype,  difficulty or condition.  We also keep the user's filter request in the input boxes so they don't have to reselect it.
 						var player = parsedURL.searchParams.get("player");
@@ -89,6 +90,9 @@ We'll just see where this goes.-->
 						var shottype = parsedURL.searchParams.get("shottype");
 						var difficulty = parsedURL.searchParams.get("difficulty");
 						var conditions = parsedURL.searchParams.get("conditions");
+						var sort = parsedURL.searchParams.get("sort");
+						var desc = (parsedURL.searchParams.get("desc") != "true" ? false : true);
+						if (!sort) sort = 0;
 						if (player) {
 							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
 							$("#player").val(player);
@@ -117,34 +121,33 @@ We'll just see where this goes.-->
 						var start = ((page - 1) * 100 > replayTable.length ? (page - 1) * 100 : 0);
 						var end = Math.min(start + 100, replayTable.length);
 						$("#noOfReplays").append("Showing results " + (replayTable.length > 0 ? (start + 1) : 0) + " to " + end + " of " + replayTable.length + " total.  <a href='/replays/dir.html'>Next page</a> -- <a href='/replays/dir.html'>Previous page</a> -- <a href='#' id='jump'>Jump to page</a>");
-						// Sorting - use sortType and if it's equal sort by date descending.
+						// Sorting - use sort and if it's equal sort by date descending.
 						// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
-						var sortType = 0;
-						if (sortType == 0) {
+						if (sort == 0) {
 							replayTable.sort(function(a, b) {
 								return (desc ? dateSort(b, a) : dateSort(a, b));
 							});
-						} else if (sortType == 1) {
+						} else if (sort == 1) {
 							replayTable.sort(function(a, b) {
 								if (nameSort(b, a) == 0) return dateSort(b, a);
 								return (desc ? nameSort(b, a) : nameSort(a, b));
 							});
-						} else if (sortType == 2) {
+						} else if (sort == 2) {
 							replayTable.sort(function(a, b) {
 								if (gameSort(b, a) == 0) return dateSort(b, a);
 								return (desc ? gameSort(b, a) : gameSort(a, b));
 							});
-						} else if (sortType == 3) {
+						} else if (sort == 3) {
 							replayTable.sort(function(a, b) {
 								if (difficultySort(b, a) == 0) return dateSort(b, a);
 								return (desc ? difficultySort(b, a) : difficultySort(a, b));
 							});
-						} else if (sortType == 4) {
+						} else if (sort == 4) {
 							replayTable.sort(function(a, b) {
 								if (shottypeSort(b, a) == 0) return dateSort(b, a);
 								return (desc ? shottypeSort(b, a) : shottypeSort(a, b));
 							});
-						} else if (sortType == 5) {
+						} else if (sort == 5) {
 							replayTable.sort(function(a, b) {
 								if (scoreSort(b, a) == 0) return dateSort(b, a);
 								return (desc ? scoreSort(b, a) : scoreSort(a, b));
@@ -185,7 +188,19 @@ We'll just see where this goes.-->
 			NOTE: At the moment this is just a cutesy project of mine.  However, if I can figure some things out, this may become a public replay uploader some time in the future.  Please wait warmly.<br />
 			<br />
 			Filter by: player name <input type="text" id="player"> -- game <select id="game"><option value="0">None</option></select> -- shottype <input type="text" id="shottype"> -- difficulty <select id="difficulty"><option value="0">None</option></select><br />
-			Conditions: no bomb <input type="checkbox" id="no-bomb"> -- no miss <input type="checkbox" id="no-miss"> -- no focus <input type="checkbox" id="no-focus"> -- TAS <input type="checkbox" id="TAS"> -- other <input type="checkbox" id="other"> -- <input type="button" id="filter" value="Go"><br />
+			Conditions: no bomb <input type="checkbox" id="no-bomb"> -- no miss <input type="checkbox" id="no-miss"> -- no focus <input type="checkbox" id="no-focus"> -- TAS <input type="checkbox" id="TAS"> -- other <input type="checkbox" id="other"><br />
+			Sort by: <select id="sortType">
+				<option value="0">Default (Date)</option>
+				<option value="1">Player Name</option>
+				<option value="2">Game</option>
+				<option value="3">Difficulty</option>
+				<option value="4">Shottype</option>
+				<option value="5">Score</option>
+			</select> <select id="desc">
+				<option value="true">Descending</option>
+				<option value="true">Ascending</option>
+			</select> -- <input type="button" id="filter" value="Go"><br />
+			<a href="#" id="reset">Reset</a><br />
 			<br />
 			<span id="noOfReplays"></span><br />
 			<br />
