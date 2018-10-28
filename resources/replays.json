@@ -1,28 +1,94 @@
 {"replays": 
 	[
 		{
-			"date": "07-05-2018",
+			"date": 1530748800000,
 			"player": "pienyan",
-			"game": "EoSD",
+			"game": 6,
+			"difficulty": 4,
 			"shottype": "ReimuB",
+			"score": 260369720,
 			"desc": "Lunatic 1MNB",
 			"replay_link": "/replays/th6_udpn01.rpy"
 		},
 		{
-			"date": "04-04-2018",
+			"date": 1522800000000,
 			"player": "pienyan",
-			"game": "EoSD",
+			"game": 6,
+			"difficulty": 4,
 			"shottype": "ReimuA",
+			"score": 253173460,
 			"desc": "Lunatic 3MNB",
 			"replay_link": "/replays/th6_udpn02.rpy"
 		},
 		{
-			"date": "10-12-2018",
+			"date": 1539302400000,
 			"player": "pienyan",
-			"game": "EoSD",
+			"game": 6,
+			"difficulty": 4,
 			"shottype": "ReimuB",
+			"score": 567033270,
 			"desc": "Lunatic score attack 567M",
 			"replay_link": "/replays/th6_udpn03.rpy"
+		},
+		{
+			"date": 1498608000000,
+			"player": "pienyan",
+			"game": 7,
+			"difficulty": 4,
+			"shottype": "ReimuB",
+			"score": 8426783590,
+			"desc": "7 deaths + 2 border breaks",
+			"replay_link": "/replays/th7_udpn01.rpy"
+		},
+		{
+			"date": 1495584000000,
+			"player": "pienyan",
+			"game": 8,
+			"difficulty": 5,
+			"shottype": "Border Team",
+			"score": 1871793050,
+			"desc": "ExNNFS",
+			"replay_link": "/replays/th8_udpn01.rpy"
+		},
+		{
+			"date": 1500249600000,
+			"player": "pienyan",
+			"game": 8,
+			"difficulty": 5,
+			"shottype": "Remilia",
+			"score": 1484061720,
+			"desc": "Misses at PBP and IS.",
+			"replay_link": "/replays/th8_udpn02.rpy"
+		},
+		{
+			"date": 1503187200000,
+			"player": "pienyan",
+			"game": 10,
+			"difficulty": 4,
+			"shottype": "ReimuB",
+			"score": 561666640,
+			"desc": "Lunatic 6MNB",
+			"replay_link": "/replays/th10_udpn01.rpy"
+		},
+		{
+			"date": 1503014400000,
+			"player": "pienyan",
+			"game": 10,
+			"difficulty": 4,
+			"shottype": "ReimuB",
+			"score": 362178190,
+			"desc": "Failed LNB attempt.  Sanae is the strongest.  @_@",
+			"replay_link": "/replays/th10_udpn02.rpy"
+		},
+		{
+			"date": 1488067200000,
+			"player": "pienyan",
+			"game": 6,
+			"difficulty": 5,
+			"shottype": "ReimuB",
+			"score": 206000000,
+			"desc": "ExNNFS",
+			"replay_link": "/"
 		}
 	]
 }

@@ -3,18 +3,84 @@
 		<link rel="stylesheet" href="/resources/main_css.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script>
+			// Lookup tables for games/difficulties
+			var games = {6: "EoSD",
+						 7: "PCB",
+						 8: "IN",
+						 9: "PoFV",
+						 10: "MoF",
+						 11: "SA",
+						 12: "UFO",
+						 12.8: "GFW",
+						 13: "TD",
+						 14: "DDC",
+						 15: "LoLK",
+						 16: "HSiFS"};
+			var difficulties = {1: "Easy",
+								2: "Normal",
+								3: "Hard",
+								4: "Lunatic",
+								5: "Extra",
+								6: "Phantasm",
+								7: "Last Word"};
+			// Sorting functions
+			function dateSort(a, b) { return a.date - b.date; };
+			function nameSort(a, b) { return a.player.toLowerCase().localeCompare(b.player.toLowerCase()); };
+			function gameSort(a, b) { return a.game - b.game; };
+			function difficultySort(a, b) { return a.difficulty - b.difficulty; };
+			function shottypeSort(a, b) { return a.shottype.toLowerCase().localeCompare(b.shottype.toLowerCase()); };
+			function scoreSort(a, b) { return a.score - b.score; };
+			// Load replay table
 			$.ajax({
-				url: "/resources/replays.json",
+				url: "replays.json",
 				mimeType: "json",
 				success: function(data) {
-					for (var i = 0; i < data.replays.length; i++) {
+					// Sorting - use sortType and if it's equal sort by date descending.
+					var replayTable = data.replays;
+					var desc = true;
+					// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
+					var sortType = 0;
+					if (sortType == 0) {
+						replayTable.sort(function(a, b) {
+							return (desc ? dateSort(b, a) : dateSort(a, b));
+						});
+					} else if (sortType == 1) {
+						replayTable.sort(function(a, b) {
+							if (nameSort(b, a) == 0) return dateSort(b, a);
+							return (desc ? nameSort(b, a) : nameSort(a, b));
+						});
+					} else if (sortType == 2) {
+						replayTable.sort(function(a, b) {
+							if (gameSort(b, a) == 0) return dateSort(b, a);
+							return (desc ? gameSort(b, a) : gameSort(a, b));
+						});
+					} else if (sortType == 3) {
+						replayTable.sort(function(a, b) {
+							if (difficultySort(b, a) == 0) return dateSort(b, a);
+							return (desc ? difficultySort(b, a) : difficultySort(a, b));
+						});
+					} else if (sortType == 4) {
+						replayTable.sort(function(a, b) {
+							if (shottypeSort(b, a) == 0) return dateSort(b, a);
+							return (desc ? shottypeSort(b, a) : shottypeSort(a, b));
+						});
+					} else if (sortType == 5) {
+						replayTable.sort(function(a, b) {
+							if (scoreSort(b, a) == 0) return dateSort(b, a);
+							return (desc ? scoreSort(b, a) : scoreSort(a, b));
+						});
+					}
+					// Populating table
+					for (var i = 0; i < replayTable.length; i++) {
 						$("#replays").append(
-							"<tr><td>" + data.replays[i].date + "</td>" +
-							"<td>" + data.replays[i].player + "</td>" +
-							"<td>" + data.replays[i].game + "</td>" +
-							"<td>" + data.replays[i].shottype + "</td>" +
-							"<td>" + data.replays[i].desc + "</td>" +
-							"<td><a href='" + data.replays[i].replay_link + "'>replay</a></td></tr>"
+							"<tr><td>" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
+							"<td>" + replayTable[i].player + "</td>" +
+							"<td>" + games[replayTable[i].game] + "</td>" +
+							"<td>" + difficulties[replayTable[i].difficulty] + "</td>" +
+							"<td>" + replayTable[i].shottype + "</td>" +
+							"<td>" + replayTable[i].score.toLocaleString() + "</td>" +
+							"<td>" + replayTable[i].desc + "</td>" +
+							"<td><a href='" + replayTable[i].replay_link + "'>replay</a></td></tr>"
 						);
 					}
 				}
@@ -29,7 +95,9 @@
 					<td>Date:</td>
 					<td>Player:</td>
 					<td>Game:</td>
+					<td>Difficulty:</td>
 					<td>Shottype:</td>
+					<td>Score:</td>
 					<td>Description:</td>
 					<td>Links:</td>
 				</tr>
