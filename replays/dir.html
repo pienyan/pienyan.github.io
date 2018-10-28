@@ -1,3 +1,11 @@
+<!-- For the time being, this is just a cutesy project of mine.
+Atm, there's a .json file storing the replay data and everything is functional.
+In order for this to be used by the public, I need to implement
+* a way for them to upload replays
+* ideally a way to pull the replay data right from the replay file on upload
+* more security measures
+First one I don't know if github allows, second seems hard and 3rd I'm not good at.
+We'll just see where this goes.-->
 <html>
 	<head>
 		<link rel="stylesheet" href="/resources/main_css.css">
@@ -47,7 +55,9 @@
 					if ($("#other").prop("checked")) conditions += 16;
 					//console.log (player + game + shottype + difficulty + conditions)
 					var redirectURL = "/replays/dir.html&" + (player.length > 0 ? "player="+player : "") + (game > 0 ? "game="+game : "") + (shottype.length > 0 ? "shottype="+shottype : "") + (difficulty > 0 ? "difficulty="+difficulty : "") + (conditions > 0 ? "conditions="+conditions : "");
-					redirectURL.replace("&","?");
+					// This only replaces the first instance, in this case it neatly gives exactly what we want.
+					redirectURL = redirectURL.replace('&','?');
+					if (redirectURL.endsWith("?")) redirectURL = redirectURL.substring(0, -1);
 					window.location.href = redirectURL;
 				});
 				// Sorting functions
@@ -75,7 +85,7 @@
 						var parsedURL = new URL(window.location.href);
 						var desc = true;
 						var page = 1;
-						// Filtering.  Can filter by player name, game, shottype,  difficulty or condition.
+						// Filtering.  Can filter by player name, game, shottype,  difficulty or condition.  We also keep the user's filter request in the input boxes so they don't have to reselect it.
 						var player = parsedURL.searchParams.get("player");
 						var game = parsedURL.searchParams.get("game");
 						var shottype = parsedURL.searchParams.get("shottype");
@@ -83,18 +93,27 @@
 						var conditions = parsedURL.searchParams.get("conditions");
 						if (player) {
 							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
+							$("#player").val(player);
 						}
 						if (game) {
 							replayTable = replayTable.filter(a => a.game == parseInt(game));
+							$("#game").val(game);
 						}
 						if (shottype) {
 							replayTable = replayTable.filter(a => a.shottype.toLowerCase().startsWith(shottype.toLowerCase()));
+							$("#shottype").val(shottype);
 						}
 						if (difficulty) {
 							replayTable = replayTable.filter(a => a.difficulty == parseInt(difficulty));
+							$("#difficulty").val(difficulty);
 						}
 						if (conditions) {
 							replayTable = replayTable.filter(a => (a.conditions & conditions) == conditions);
+							if ((conditions & 1) > 0) $("#no-bomb").prop("checked", true);
+							if ((conditions & 2) > 0) $("#no-miss").prop("checked", true);
+							if ((conditions & 4) > 0) $("#no-focus").prop("checked", true);
+							if ((conditions & 8) > 0) $("#TAS").prop("checked", true);
+							if ((conditions & 16) > 0) $("#other").prop("checked", true);
 						}
 						// Calculate numbers based  on filtered table.
 						var start = ((page - 1) * 100 > replayTable.length ? (page - 1) * 100 : 0);
