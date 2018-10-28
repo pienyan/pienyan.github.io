@@ -108,7 +108,7 @@ We'll just see where this goes.-->
 						var conditions = parsedURL.searchParams.get("conditions");
 						var sort = parsedURL.searchParams.get("sort");
 						var desc = (parsedURL.searchParams.get("desc") != "false" ? true : false);
-						console.log("desc")?
+						console.log("desc");
 						if (!sort) sort = 0;
 						if (player) {
 							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
