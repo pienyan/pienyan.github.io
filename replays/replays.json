@@ -107,6 +107,18 @@
 			"conditions": 3,
 			"desc": "ExNNFS",
 			"replay_link": "/replays/th06_udpn04.rpy"
+		},
+		{
+			"date": 1537329600000,
+			"player": "Maribel Hearn",
+			"game": 13,
+			"difficulty": 4,
+			"shottype": "Marisa",
+			"score": 3164587040,
+			"clear": true,
+			"conditions": 0,
+			"desc": "Hi Mari, I stole your replay for testing reasons.  Hope you don't mind.  xoxo",
+			"replay_link": "/replays/th13_udMn01.rpy"
 		}
 	]
 }
