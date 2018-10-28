@@ -62,7 +62,7 @@ We'll just see where this goes.-->
 					var shottype = $("#shottype").val();
 					var difficulty = $("#difficulty").val();
 					var conditions = 0;
-					var sort = parseInt($("#sort").val());
+					var sort = $("#sort").val();
 					var desc = $("#desc").val();
 					if ($("#no-bomb").prop("checked")) conditions += 1;
 					if ($("#no-miss").prop("checked")) conditions += 2;
@@ -206,7 +206,7 @@ We'll just see where this goes.-->
 			<br />
 			Filter by: player name <input type="text" id="player"> -- game <select id="game"><option value="0">None</option></select> -- shottype <input type="text" id="shottype"> -- difficulty <select id="difficulty"><option value="0">None</option></select><br />
 			Conditions: no bomb <input type="checkbox" id="no-bomb"> -- no miss <input type="checkbox" id="no-miss"> -- no focus <input type="checkbox" id="no-focus"> -- TAS <input type="checkbox" id="TAS"> -- other <input type="checkbox" id="other"><br />
-			Sort by: <select id="sortType">
+			Sort by: <select id="sort">
 				<option value="0">Default (Date)</option>
 				<option value="1">Player Name</option>
 				<option value="2">Game</option>
