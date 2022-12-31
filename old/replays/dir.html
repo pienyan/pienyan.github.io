@@ -1,0 +1,240 @@
+<!-- For the time being, this is just a cutesy project of mine.
+Atm, there's a .json file storing the replay data and everything is functional.
+In order for this to be used by the public, I need to implement
+* a way for them to upload replays
+* ideally a way to pull the replay data right from the replay file on upload
+* more security measures
+First one I don't know if github allows, second seems hard and 3rd I'm not good at.
+We'll just see where this goes.-->
+<html>
+	<head>
+		<link rel="stylesheet" href="/resources/main_css.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			$( function() {
+				// Lookup tables for games/difficulties
+				var games = {6: "EoSD",
+							 7: "PCB",
+							 8: "IN",
+							 9: "PoFV",
+							 10: "MoF",
+							 11: "SA",
+							 12: "UFO",
+							 12.8: "GFW",
+							 13: "TD",
+							 14: "DDC",
+							 15: "LoLK",
+							 16: "HSiFS"};
+				var difficulties = {1: "Easy",
+									2: "Normal",
+									3: "Hard",
+									4: "Lunatic",
+									5: "Extra",
+									6: "Phantasm",
+									7: "Last Word"};
+				// Sorting functions
+				function dateSort(a, b) { return a.date - b.date; };
+				function nameSort(a, b) { return a.player.toLowerCase().localeCompare(b.player.toLowerCase()); };
+				function gameSort(a, b) { return a.game - b.game; };
+				function difficultySort(a, b) { return a.difficulty - b.difficulty; };
+				function shottypeSort(a, b) { return a.shottype.toLowerCase().localeCompare(b.shottype.toLowerCase()); };
+				function scoreSort(a, b) { return a.score - b.score; };
+				// Populate game table
+				for (var key in games) {
+					$("#game").append("<option value='"+key+"'>"+games[key]+"</option>");
+				}
+				// Populate difficulty table
+				for (var key in difficulties) {
+					$("#difficulty").append("<option value='"+key+"'>"+difficulties[key]+"</option>");
+				}
+				// Load replay table
+				$.ajax({
+					url: "replays.json",
+					mimeType: "json",
+					success: function(data) {
+						// Initialization
+						var replayTable = data.replays
+						var parsedURL = new URL(window.location.href);
+						var page = parsedURL.searchParams.get("page");
+						if (!page) page = 1;
+						// Filtering.  Can filter by player name, game, shottype,  difficulty or condition.  We also keep the user's filter request in the input boxes so they don't have to reselect it.
+						var player = parsedURL.searchParams.get("player");
+						var game = parsedURL.searchParams.get("game");
+						var shottype = parsedURL.searchParams.get("shottype");
+						var difficulty = parsedURL.searchParams.get("difficulty");
+						var conditions = parsedURL.searchParams.get("conditions");
+						var sort = parsedURL.searchParams.get("sort");
+						var desc = (parsedURL.searchParams.get("desc") != "false" ? true : false);
+						if (!sort) sort = 0;
+						if (player) {
+							replayTable = replayTable.filter(a => a.player.toLowerCase().startsWith(player.toLowerCase()));
+							$("#player").val(player);
+						}
+						if (game) {
+							replayTable = replayTable.filter(a => a.game == parseInt(game));
+							$("#game").val(game);
+						}
+						if (shottype) {
+							replayTable = replayTable.filter(a => a.shottype.toLowerCase().startsWith(shottype.toLowerCase()));
+							$("#shottype").val(shottype);
+						}
+						if (difficulty) {
+							replayTable = replayTable.filter(a => a.difficulty == parseInt(difficulty));
+							$("#difficulty").val(difficulty);
+						}
+						if (conditions) {
+							replayTable = replayTable.filter(a => (a.conditions & conditions) == conditions);
+							if ((conditions & 1) > 0) $("#no-bomb").prop("checked", true);
+							if ((conditions & 2) > 0) $("#no-miss").prop("checked", true);
+							if ((conditions & 4) > 0) $("#no-focus").prop("checked", true);
+							if ((conditions & 8) > 0) $("#TAS").prop("checked", true);
+							if ((conditions & 16) > 0) $("#other").prop("checked", true);
+						}
+						// Calculate numbers based  on filtered table.
+						var start = ((page - 1) * 100 > replayTable.length ? 0 : (page - 1) * 100);
+						var end = Math.min(start + 100, replayTable.length);
+						$("#noOfReplays").append("Showing results " + (replayTable.length > 0 ? (start + 1) : 0) + " to " + end + " of " + replayTable.length + " total.  " + (end < replayTable.length ? "<a href='/replays/dir.html?page="+(page + 1)+"'>Next page</a> -- " : "") + (start > 0 ? "<a href='/replays/dir.html?page="+(page - 1)+"'>Previous page</a> -- " : ""));
+						// Sorting - use sort and if it's equal sort by date descending.  Also keep sort values in the input boxes.
+						// 0 = date 1 = player 2 = game 3 = difficulty 4 = shottype 5 = score
+						if (sort == 0) {
+							replayTable.sort(function(a, b) {
+								return (desc ? dateSort(b, a) : dateSort(a, b));
+							});
+						} else if (sort == 1) {
+							replayTable.sort(function(a, b) {
+								if (nameSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? nameSort(b, a) : nameSort(a, b));
+							});
+						} else if (sort == 2) {
+							replayTable.sort(function(a, b) {
+								if (gameSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? gameSort(b, a) : gameSort(a, b));
+							});
+						} else if (sort == 3) {
+							replayTable.sort(function(a, b) {
+								if (difficultySort(b, a) == 0) return dateSort(b, a);
+								return (desc ? difficultySort(b, a) : difficultySort(a, b));
+							});
+						} else if (sort == 4) {
+							replayTable.sort(function(a, b) {
+								if (shottypeSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? shottypeSort(b, a) : shottypeSort(a, b));
+							});
+						} else if (sort == 5) {
+							replayTable.sort(function(a, b) {
+								if (scoreSort(b, a) == 0) return dateSort(b, a);
+								return (desc ? scoreSort(b, a) : scoreSort(a, b));
+							});
+						}
+						$("#sort").val(sort);
+						$("#desc").val((desc ? "true" : "false"));
+						// Populating table
+						for (var i = start; i < end; i++) {
+							// Calculate conditions.
+							var conditions = "";
+							if ((replayTable[i].conditions & 1) > 0) conditions += "NB ";
+							if ((replayTable[i].conditions & 2) > 0) conditions += "NM ";
+							if ((replayTable[i].conditions & 4) > 0) conditions += "NF ";
+							if ((replayTable[i].conditions & 8) > 0) conditions += "TAS ";
+							if ((replayTable[i].conditions & 16) > 0) conditions += "? ";
+							// Add row to table
+							$("#replays").append(
+								"<tr><td class='date'>" + (new Date(replayTable[i].date)).toDateString() + "</td>" +
+								"<td>" + replayTable[i].player + "</td>" +
+								"<td>" + games[replayTable[i].game] + "</td>" +
+								"<td>" + difficulties[replayTable[i].difficulty] + "</td>" +
+								"<td>" + replayTable[i].shottype + "</td>" +
+								"<td>" + replayTable[i].score.toLocaleString() + "</td>" +
+								"<td>" + (replayTable[i].clear ? "Y" : "N") + "</td>" + 
+								"<td><b>" + conditions + "</b></td>" + 
+								"<td class='desc'>" + replayTable[i].desc + "</td>" +
+								"<td><a href='" + replayTable[i].replay_link + "'>replay</a></td></tr>"
+							);
+						}
+					}
+				});
+				// Reset function
+				$("#reset").on("click", function() {
+					$("#player").val("");
+					$("#game").val(0);
+					$("#shottype").val("");
+					$("#difficulty").val(0);
+					$("#no-bomb").prop("checked", false);
+					$("#no-miss").prop("checked", false);
+					$("#no-focus").prop("checked", false);
+					$("#TAS").prop("checked", false);
+					$("#other").prop("checked", false);
+					$("#sort").val(0);
+					$("#desc").val("true");
+				});
+				// Page jump redirect function.
+				$("#jump").on("click", function() {
+					console.log("test");
+					var page = parseInt(prompt("Jump to page:"));
+					if (page && page > 0)
+						window.location.href = "/replays/dir.html?page="+page;
+					else
+						alert("Page must be a number greater than 0.");
+				});
+				// Filter redirect function
+				$("#filter").on("click", function() {
+					var player = $("#player").val();
+					var game = $("#game").val();
+					var shottype = $("#shottype").val();
+					var difficulty = $("#difficulty").val();
+					var conditions = 0;
+					var sort = $("#sort").val();
+					var desc = $("#desc").val();
+					if ($("#no-bomb").prop("checked")) conditions += 1;
+					if ($("#no-miss").prop("checked")) conditions += 2;
+					if ($("#no-focus").prop("checked")) conditions += 4;
+					if ($("#TAS").prop("checked")) conditions += 8;
+					if ($("#other").prop("checked")) conditions += 16;
+					//console.log (player + game + shottype + difficulty + conditions)
+					var redirectURL = "/replays/dir.html?" + (sort > 0 ? "sort="+sort+"&" : "") + (desc != "false" ? "" : "desc=false&") + (player.length > 0 ? "player="+player+"&" : "") + (game > 0 ? "game="+game+"&" : "") + (shottype.length > 0 ? "shottype="+shottype+"&" : "") + (difficulty > 0 ? "difficulty="+difficulty+"&" : "") + (conditions > 0 ? "conditions="+conditions+"&" : "");
+					redirectURL = redirectURL.substring(0, redirectURL.length - 1);
+					window.location.href = redirectURL;
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="index">
+			<h3>Replay Directory <a href="/">(return to homepage)</a></h3>
+			<br />
+			NOTE: At the moment this is just a cutesy project of mine.  However, if I can figure some things out, this may become a public replay uploader some time in the future.  Please wait warmly.<br />
+			<br />
+			Filter by: player name <input type="text" id="player"> -- game <select id="game"><option value="0">None</option></select> -- shottype <input type="text" id="shottype"> -- difficulty <select id="difficulty"><option value="0">None</option></select><br />
+			Conditions: no bomb <input type="checkbox" id="no-bomb"> -- no miss <input type="checkbox" id="no-miss"> -- no focus <input type="checkbox" id="no-focus"> -- TAS <input type="checkbox" id="TAS"> -- other <input type="checkbox" id="other"><br />
+			Sort by: <select id="sort">
+				<option value="0">Default (Date)</option>
+				<option value="1">Player Name</option>
+				<option value="2">Game</option>
+				<option value="3">Difficulty</option>
+				<option value="4">Shottype</option>
+				<option value="5">Score</option>
+			</select> <select id="desc">
+				<option value="true">Descending</option>
+				<option value="false">Ascending</option>
+			</select> -- <input type="button" id="filter" value="Go"><br />
+			<a href="#" id="reset">Reset</a><br />
+			<br />
+			<span id="noOfReplays"></span> <a href='#' id='jump'>Jump to page</a><br />
+			<br />
+			<table align="center" id="replays">
+				<tr>
+					<td class='date'>Date:</td>
+					<td>Player:</td>
+					<td>Game:</td>
+					<td>Difficulty:</td>
+					<td>Shottype:</td>
+					<td>Score:</td>
+					<td>(C)?</td>
+					<td>Conditions:</td>
+					<td class='desc'>Description:</td>
+					<td>Links:</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
