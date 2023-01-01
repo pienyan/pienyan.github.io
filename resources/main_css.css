@@ -20,7 +20,8 @@ td {
 
 .index {
 	/* text-align: center; */
-	padding: 0 15% 0 15%
+	padding: 0 15% 0 15%;
+	max-width: 1600px;
 }
 
 .center {
