@@ -19,6 +19,10 @@ td {
 }
 
 .index {
-	text-align: center;
+	/* text-align: center; */
 	padding: 0 15% 0 15%
+}
+
+.center {
+	text-align: center;
 }
